@@ -1,0 +1,174 @@
+Table users {
+  id varchar(255) [pk]
+  email varchar(255) [unique]
+  username varchar(255) [unique]
+  password varchar(255)
+  full_name varchar(255)
+  document varchar(255) [unique]
+  phone varchar(255)
+  reset_password_code varchar(255)
+  reset_password_date_time datetime
+  reset_password_tries int [default: 0]
+  methods json
+  session_token varchar(255)
+  created_at datetime
+  updated_at datetime
+  deleted_at datetime [default: null]
+}
+
+Table specialties {
+  id varchar(255) [pk]
+  name varchar(255)
+  created_at datetime
+  updated_at datetime
+  deleted_at datetime [default: null]
+}
+
+Table insurances {
+  id varchar(255) [pk]
+  name varchar(255)
+  created_at datetime
+  updated_at datetime
+  deleted_at datetime [default: null]
+}
+
+Table professionals {
+  id varchar(255) [pk]
+  name varchar(255)
+  crm varchar(255)
+  rating float [default: 0]
+  rating_count int [default: 0]
+  address varchar(255)
+  phone varchar(255)
+  profile_image_url text [default: null]
+  slot_interval int
+  location point
+  owner_id varchar(255) [ref: > users.id]
+  created_at datetime
+  updated_at datetime
+  visible boolean [default: true]
+  finished_profile boolean [default: false]
+  search_words varchar(255)
+  deleted_at datetime [default: null]
+}
+
+Table services {
+  id varchar(255) [pk]
+  name varchar(255)
+  price decimal
+  duration int
+  available boolean
+  created_at datetime
+  updated_at datetime
+  deleted_at datetime [default: null]
+}
+
+Table schedules {
+  id varchar(255) [pk]
+  user_id varchar(255)
+  professional_id varchar(255) [ref: > professionals.id]
+  end_date datetime
+  start_date datetime
+  status varchar(255)
+  block boolean [default: false]
+  sent_rate_notification boolean [default: false]
+  created_at datetime
+  updated_at datetime
+  deleted_at datetime [default: null]
+  foreign key (user_id)  [ref: > users.id] 
+}
+
+Table schedule_rules {
+  id varchar(255) [pk]
+  professional_id varchar(255)
+  weekday int
+  start_time datetime
+  end_time datetime
+  created_at datetime
+  updated_at datetime
+  deleted_at datetime [default: null]
+  foreign key (professional_id)  [ref: > professionals.id]
+}
+
+Table professional_services {
+  id varchar(255) [pk]
+  professional_id varchar(255) [ref: > professionals.id]
+  service_id varchar(255) [ref: > services.id]
+  created_at datetime
+  updated_at datetime
+  deleted_at datetime [default: null]
+}
+
+Table professional_specialties {
+  id varchar(255) [pk]
+  professional_id varchar(255) [ref: > professionals.id]
+  specialty_id varchar(255) [ref: > specialties.id]
+  created_at datetime
+  updated_at datetime
+  deleted_at datetime [default: null]
+}
+
+Table professional_insurances {
+  id varchar(255) [pk]
+  professional_id varchar(255) [ref: > professionals.id]
+  insurance_id varchar(255) [ref: > insurances.id]
+  created_at datetime
+  updated_at datetime
+  deleted_at datetime [default: null]
+}
+
+Table devices {
+  id varchar(255) [pk]
+  device_id varchar(255)
+  platform varchar(50)
+  fcm_token varchar(255)
+  build_number varchar(50)
+  user_id varchar(255)
+  locale varchar(50)
+  created_at datetime
+  updated_at datetime
+  deleted_at datetime [default: null]
+  foreign key (user_id)  [ref: > users.id]
+}
+
+Table dynamic_notification {
+  id varchar(255) [pk]
+  key_name varchar(255)
+  title text
+  subtitle text
+  page text
+  created_at datetime
+  updated_at datetime
+  deleted_at datetime [default: null]
+}
+
+Table notification {
+  id varchar(255) [pk] 
+  is_read boolean [default: false]
+  user_id varchar(255) [ref: > users.id]
+  dynamic_notification_id varchar(255)  [ref: > dynamic_notification.id]
+  variables json
+  created_at datetime
+  updated_at datetime
+  deleted_at datetime [default: null]
+}
+
+Table schedule_services {
+  id varchar(255) [pk]
+  schedule_id varchar(255) [ref: > schedules.id]
+  service_id varchar(255) [ref: > services.id]
+  created_at datetime
+  updated_at datetime
+  deleted_at datetime [default: null]
+}
+
+Table ratings {
+  id varchar(255) [pk]
+  user_id varchar(255) [ref: > users.id]
+  professional_id varchar(255) [ref: > professionals.id]
+  stars int
+  comments text
+  created_at datetime
+  updated_at datetime
+  deleted_at datetime [default: null]
+}
